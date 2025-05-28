@@ -1,10 +1,16 @@
-import type { User } from "@supabase/supabase-js";
+import type { AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 
+interface Credentials {
+  user: string;
+  password: string;
+}
+
 interface AuthContextType {
   user: User | null;
-  signInWithGitHub: () => void;
+  signUp: (credentials: Credentials) => Promise<AuthResponse>;
+  signIn: (credentials: Credentials) => Promise<AuthTokenResponsePassword>;
   signOut: () => void;
 }
 
@@ -27,8 +33,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  const signInWithGitHub = () => {
-    supabase.auth.signInWithOAuth({ provider: "github" });
+  const signUp = async (credentials: Credentials): Promise<AuthResponse> => {
+    return await supabase.auth.signUp({ 
+      email: credentials.user, 
+      password: credentials.password
+    });
+  };
+
+  const signIn = async (credentials: Credentials): Promise<AuthTokenResponsePassword> => {
+    return await supabase.auth.signInWithPassword({ 
+      email: credentials.user, 
+      password: credentials.password
+    });
   };
 
   const signOut = () => {
@@ -36,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signInWithGitHub, signOut }}>
+    <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );

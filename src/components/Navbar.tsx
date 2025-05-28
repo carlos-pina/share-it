@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, signInWithGitHub, signOut } = useAuth();
+  const { user, signIn, signUp, signOut } = useAuth();
 
   const displayName = user?.user_metadata.user_name || user?.email;
   return (
@@ -24,23 +24,27 @@ export const Navbar = () => {
               Posts
             </Link>
             <Link
-              to="/create"
-              className="text-gray-300 hover:text-yellow-500 transition-colors"
-            >
-              Create Post
-            </Link>
-            <Link
               to="/communities"
               className="text-gray-300 hover:text-yellow-500 transition-colors"
             >
               Communities
             </Link>
-            <Link
-              to="/community/create"
-              className="text-gray-300 hover:text-yellow-500 transition-colors"
-            >
-              Create Community
-            </Link>
+            {user && (
+            <div className="hidden md:flex items-center space-x-8">
+              <Link
+                to="/create"
+                className="text-gray-300 hover:text-yellow-500 transition-colors"
+              >
+                Create Post
+              </Link>
+              <Link
+                to="/community/create"
+                className="text-gray-300 hover:text-yellow-500 transition-colors"
+              >
+                Create Community
+              </Link>
+            </div>
+            )}
           </div>
 
           {/* Desktop Auth */}
@@ -57,18 +61,26 @@ export const Navbar = () => {
                 <span className="text-gray-300">{ displayName }</span>
                 <button
                   onClick={ signOut }
-                  className="bg-red-500 px-3 py-1 rounded"
+                  className="bg-red-500 px-3 py-1 rounded cursor-pointer"
                 >
                   Sign Out
                 </button>
               </div>
             ) : (
-              <button
-                onClick={signInWithGitHub}
-                className="bg-blue-500 px-3 py-1 rounded cursor-pointer"
-              >
-                Sign in with GitHub
-              </button>
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/signin"
+                  className="bg-blue-500 px-3 py-1 rounded cursor-pointer"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-blue-500 px-3 py-1 rounded cursor-pointer"
+                >
+                  Sign up
+                </Link>
+              </div>
             )}
           </div>
 
