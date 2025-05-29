@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, signIn, signUp, signOut } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const onSignOut = () => {
+    signOut().then((response) => {
+      if (response && response.error) {
+        throw new Error(response.error.message);
+      } else {
+        navigate("/");
+      }
+    });
+  }
 
   const displayName = user?.user_metadata.user_name || user?.email;
   return (
@@ -60,7 +72,7 @@ export const Navbar = () => {
                 )}
                 <span className="text-gray-300">{ displayName }</span>
                 <button
-                  onClick={ signOut }
+                  onClick={ onSignOut }
                   className="bg-red-500 px-3 py-1 rounded cursor-pointer"
                 >
                   Sign Out

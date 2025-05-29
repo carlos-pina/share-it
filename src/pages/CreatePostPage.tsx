@@ -1,12 +1,22 @@
 import { CreatePost } from "../components/CreatePost";
+import { useAuth } from "../context/AuthContext";
 
 export const CreatePostPage = () => {
+  const { user } = useAuth();
+
   return (
-    <div className="pt-20">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-        Create New Post
-      </h2>
-      <CreatePost />
+    <div className="mt-6">
+      { user ? (
+        <div className="pt-20">
+          <CreatePost />
+        </div>
+      ) : (
+        <div className="pt-20">
+          <h2 className="text-4xl font-bold mb-6 text-center text-purple-500">
+            Please, sign-in to share something!
+          </h2>
+        </div>
+      )}
     </div>
   );
 };

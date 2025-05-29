@@ -33,32 +33,40 @@ export const CommunityDisplay = ({ communityId }: Props) => {
     queryFn: () => fetchCommunityPost(communityId),
   });
 
-  if (isLoading)
+  if (isLoading) {
     return <div className="text-center py-4"> Loading communities... </div>;
-  
-  if (error)
+  }
+
+  if (error) {
     return (
       <div className="text-center text-red-500 py-4">
         Error: {error.message}
       </div>
     );
+  }
   
-    return (
+  return (
     <div>
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-        {data && data[0].communities.name} Community Posts
-      </h2>
-
       {data && data.length > 0 ? (
-        <div className="flex flex-wrap gap-6 justify-center">
-          {data.map((post) => (
-            <PostItem key={ post.id } post={ post } />
-          ))}
+        <div>
+          <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            {data && data[0].communities.name} Community Posts
+          </h2>
+          <div className="flex flex-wrap gap-6 justify-center">
+            {data.map((post) => (
+              <PostItem key={ post.id } post={ post } />
+            ))}
+          </div>
         </div>
       ) : (
-        <p className="text-center text-gray-400">
-          No posts in this community yet.
-        </p>
+        <div>
+          <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            Community Posts
+          </h2>
+          <p className="text-center text-gray-400">
+            No posts in this community yet.
+          </p>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import type { AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js";
+import type { AuthError, AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 
@@ -11,7 +11,7 @@ interface AuthContextType {
   user: User | null;
   signUp: (credentials: Credentials) => Promise<AuthResponse>;
   signIn: (credentials: Credentials) => Promise<AuthTokenResponsePassword>;
-  signOut: () => void;
+  signOut: () => Promise<{error: AuthError | null}>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const signOut = () => {
-    supabase.auth.signOut();
+  const signOut = async (): Promise<{ error: AuthError | null }> => {
+    return await supabase.auth.signOut();
   };
 
   return (

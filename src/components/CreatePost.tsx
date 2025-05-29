@@ -84,6 +84,9 @@ export const CreatePost = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
+      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        Create New Post
+      </h2>
       <div>
         <label htmlFor="title" className="block mb-2 font-medium"> Title </label>
         <input
