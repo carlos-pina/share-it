@@ -83,8 +83,8 @@ export const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 text-gray-400">
+      <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
         Create New Post
       </h2>
       <div>
@@ -94,7 +94,7 @@ export const CreatePost = () => {
           id="title"
           required
           onChange={(event) => setTitle(event.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-gray/10 bg-transparent p-2 rounded"
         />
       </div>
       <div>
@@ -104,12 +104,15 @@ export const CreatePost = () => {
           required
           rows={5}
           onChange={(event) => setContent(event.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-gray/10 bg-transparent p-2 rounded"
         />
       </div>
       <div>
-        <label> Select Community</label>
-        <select id="community" onChange={handleCommunityChange}>
+        <label htmlFor="community" className="block mb-2 font-medium"> Select Community</label>
+        <select
+          id="community" 
+          onChange={handleCommunityChange}
+          className="w-full border border-gray/10 bg-transparent p-2 rounded">
           <option value={""}> -- Choose a Community -- </option>
           {communities?.map((community, key) => (
             <option key={ key } value={ community.id }>
@@ -126,12 +129,12 @@ export const CreatePost = () => {
           accept="image/*"
           required
           onChange={handleFileChange}
-          className="w-full text-gray-200"
+          className="w-full text-gray-400"
         />
       </div>
       <button
         type="submit"
-        className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer">
+        className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
           { isPending ? "Creating..." : "Create Post" }
         </button>
         {isError && <p className="text-red-500"> Error creating post. </p>}

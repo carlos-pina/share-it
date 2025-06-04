@@ -49,7 +49,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
     <div>
       {data && data.length > 0 ? (
         <div>
-          <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
             {data && data[0].communities.name} Community Posts
           </h2>
           <div className="flex flex-wrap gap-6 justify-center">
@@ -60,7 +60,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
         </div>
       ) : (
         <div>
-          <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
             Community Posts
           </h2>
           <p className="text-center text-gray-400">

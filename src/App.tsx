@@ -11,7 +11,7 @@ import { SignUpPage } from './pages/SignUpPage'
 
 function App() {
   return (
-    <div className="min-h-screen bg-black text-gray-100 transition-opacity duration-700 pt-20">
+    <div className="min-h-screen bg-white text-gray-100 transition-opacity duration-700 pt-10">
       <Navbar />
       <div className="container mx-auto px-4 py-6">
         <Routes>

@@ -34,11 +34,11 @@ export const SignUp = () => {
   return (
     <div className="mt-6">
       { isSignUp ? (
-        <div className="text-center text-3xl font-bold text-purple-500">
+        <div className="text-center text-3xl font-bold text-blue-500">
           Please review your email to confirm your signup. Enjoy the app!
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
+        <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4 text-gray-400">
           <div>
             <label htmlFor="email" className="block mb-2 font-medium"> User </label>
             <input
@@ -46,7 +46,7 @@ export const SignUp = () => {
               id="email"
               required
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full border border-white/10 bg-transparent p-2 rounded"
+              className="w-full border border-gray/10 bg-transparent p-2 rounded"
             />
           </div>
           <div>
@@ -56,12 +56,12 @@ export const SignUp = () => {
               id="password"
               required
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full border border-white/10 bg-transparent p-2 rounded"
+              className="w-full border border-gray/10 bg-transparent p-2 rounded"
             />
           </div>
           <button
             type="submit"
-            className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer">
+            className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
               Sign Up
           </button>
           {error && <p className="text-red-500"> Error sign up: { error } </p>}

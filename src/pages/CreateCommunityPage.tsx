@@ -12,7 +12,7 @@ export const CreateCommunityPage = () => {
         </div>
       ) : (
         <div className="pt-20">
-          <h2 className="text-4xl font-bold mb-6 text-center text-purple-500">
+          <h2 className="text-4xl font-bold mb-6 text-center text-blue-500">
             Please, sign-in to share something!
           </h2>
         </div>
