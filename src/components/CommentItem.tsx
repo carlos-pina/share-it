@@ -47,7 +47,7 @@ export const CommentItem = ({ comment, postId }: Props) => {
         postId,
         comment.id,
         user?.id,
-        user?.user_metadata.user_name
+        user?.user_metadata.user_name || user?.email
       ),
 
     onSuccess: () => {

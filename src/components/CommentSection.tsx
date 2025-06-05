@@ -74,7 +74,7 @@ export const CommentSection = ({ postId }: Props) => {
         newComment,
         postId,
         user?.id,
-        user?.user_metadata.user_name
+        user?.user_metadata.user_name || user?.email
       ),
 
     onSuccess: () => {
@@ -126,14 +126,14 @@ export const CommentSection = ({ postId }: Props) => {
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 text-gray-400">
       <h3 className="text-2xl font-semibold mb-4"> Comments </h3>
 
       { /* Create Comment Section */ }
       { user ? (
         <form onSubmit={handleSubmit} className="mb-4">
           <textarea
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
+            className="w-full border border-gray/10 bg-transparent p-2 rounded"
             value={ commentText }
             rows={ 3 }
             placeholder="Write a comment..."
