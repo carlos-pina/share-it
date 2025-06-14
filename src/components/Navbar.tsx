@@ -44,7 +44,7 @@ export const Navbar = () => {
             {user && (
             <div className="hidden md:flex items-center space-x-8">
               <Link
-                to="/create"
+                to="/post/create"
                 className="text-gray-400 hover:text-blue-500 transition-colors"
               >
                 Create Post
@@ -54,6 +54,12 @@ export const Navbar = () => {
                 className="text-gray-400 hover:text-blue-500 transition-colors"
               >
                 Create Community
+              </Link>
+              <Link
+                to="/convert"
+                className="text-gray-400 hover:text-blue-500 transition-colors"
+              >
+                Video Convert
               </Link>
             </div>
             )}
@@ -142,7 +148,7 @@ export const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/create"
+              to="/post/create"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
             >
               Create Post
