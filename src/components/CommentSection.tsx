@@ -118,7 +118,11 @@ export const CommentSection = ({ postId }: Props) => {
   const commentTree = comments ? buildCommentTree(comments) : [];
 
   if (isLoading) {
-    return <div> Loading comments... </div>
+    return (
+      <div>
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading comments...</p>
+      </div>
+    )
   }
 
   if (error) {

@@ -132,6 +132,7 @@ export const CreatePost = () => {
           className="w-full text-gray-400"
         />
       </div>
+      { selectedFile && <img src={URL.createObjectURL(selectedFile)} width="250" />}
       <button
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">

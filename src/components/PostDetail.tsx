@@ -27,7 +27,11 @@ export const PostDetail = ({ postId }: Props) => {
   });
 
   if (isLoading) {
-    return <div> Loading posts... </div>
+    return (
+      <div> 
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading post...</p>
+      </div>
+    )
   }
 
   if (error) {

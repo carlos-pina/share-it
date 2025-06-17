@@ -34,7 +34,11 @@ export const CommunityDisplay = ({ communityId }: Props) => {
   });
 
   if (isLoading) {
-    return <div className="text-center py-4"> Loading communities... </div>;
+    return (
+      <div>
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading communities...</p>
+      </div>
+    )
   }
 
   if (error) {

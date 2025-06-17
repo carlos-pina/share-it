@@ -83,7 +83,11 @@ export const LikeButton = ({ postId }: Props) => {
   const userVote = votes?.find((v) => v.user_id == user?.id)?.vote;
 
   if (isLoading) {
-    return <div> Loading votes... </div>
+    return (
+      <div> 
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading votes...</p>
+      </div>
+    )
   }
 
   if (error) {

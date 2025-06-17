@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router'
-import { Home } from './pages/Home'
+import { PostsPage } from './pages/PostsPage'
 import { Navbar } from './components/Navbar'
 import { CreatePostPage } from './pages/CreatePostPage'
 import { PostPage } from './pages/PostPage'
@@ -16,7 +16,7 @@ function App() {
       <Navbar />
       <div className="container mx-auto px-4 py-6">
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<PostsPage />} />
           <Route path='/signup' element={<SignUpPage />} />
           <Route path='/signin' element={<SignInPage />} />
           <Route path='/post/create' element={<CreatePostPage />} />
