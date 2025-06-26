@@ -4,6 +4,8 @@ import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { fetchCommunities, type Community } from "./CommunityList";
+import { VideoConvert } from "./VideoConvert";
+import type { FileData } from '@ffmpeg/ffmpeg';
 
 interface PostInput {
   title: string;
@@ -12,12 +14,12 @@ interface PostInput {
   community_id?: number | null;
 }
 
-const createPost = async (post: PostInput, imageFile: File) => {
+/*const createPost = async (post: PostInput, imageFile: File) => {
   const filePath = `${post.title}-${Date.now()}-${imageFile.name}`;
 
   const { error: uploadError } = await supabase.storage
     .from("post-images")
-    .upload(filePath, imageFile);
+    . upload(filePath, imageFile);
 
   if (uploadError) throw new Error(uploadError.message);
 
@@ -32,13 +34,14 @@ const createPost = async (post: PostInput, imageFile: File) => {
   if (error) throw new Error(error.message);
 
   return data;
-}
+}*/
 
 export const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [communityId, setCommunityId] = useState<number | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [dataGif, setDataGif] = useState<FileData>();
+  const [dataImg, setDataImg] = useState<FileData>();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -48,8 +51,8 @@ export const CreatePost = () => {
   });
 
   const { mutate, isPending, isError } = useMutation({ 
-    mutationFn: (data: { post:PostInput; imageFile: File }) => {
-      return createPost(data.post, data.imageFile);
+    mutationFn: (data: { post:PostInput }) => {
+      return createPost(data.post);
     },
 
     onSuccess: () => {
@@ -57,25 +60,67 @@ export const CreatePost = () => {
     }
   });
 
+  const setParentUrlGif = (gifData: FileData, imgData: FileData) => {
+    setDataGif(gifData);
+    setDataImg(imgData);
+  }
+
+  const uploadFile = async (imageFile: FileData, extension: string): Promise<string> => {
+    const filePath = `${title}-${Date.now()}.${extension}`;
+  
+    // Currently we only upload GIF and PNG files.
+    const typeContent = extension == "gif" ? "image/gif" : "image/png";
+
+    const { error: uploadError } = await supabase.storage
+      .from("post-images")
+      .upload(filePath, imageFile, { contentType: typeContent });
+  
+    if (uploadError) throw new Error(uploadError.message);
+  
+    const { data: publicURLData } = supabase.storage
+      .from("post-images")
+      .getPublicUrl(filePath);
+
+    return publicURLData.publicUrl;
+  }
+
+  const createPost = async (post: PostInput) => {
+    if (!dataGif || !dataImg)
+      throw new Error("There are not files to upload.");
+      
+    const urlGifFile = await uploadFile(dataGif, "gif");
+    const urlImgFile = await uploadFile(dataImg, "png");
+
+    const { data, error } = await supabase
+      .from("posts")
+      .insert({...post, image_url: urlImgFile, gif_url: urlGifFile});
+
+    if (error) throw new Error(error.message);
+
+    return data;
+  }
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!selectedFile) return;
+    
+    if (!dataGif || !dataImg)
+      throw new Error("There are not files to upload.");
+    
     mutate({ 
       post: { 
         title,
         content,
         avatar_url: user?.user_metadata.avatar_url || null,
         community_id: communityId,
-      }, 
-      imageFile: selectedFile
+      }
     });
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  /*const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
         setSelectedFile(event.target.files[0]);
     }
-  };
+  };*/
 
   const handleCommunityChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -108,12 +153,13 @@ export const CreatePost = () => {
         />
       </div>
       <div>
-        <label htmlFor="community" className="block mb-2 font-medium"> Select Community</label>
+        <label htmlFor="community" className="block mb-2 font-medium"> Select Group</label>
         <select
-          id="community" 
+          id="community"
+          required
           onChange={handleCommunityChange}
           className="w-full border border-gray/10 bg-transparent p-2 rounded">
-          <option value={""}> -- Choose a Community -- </option>
+          <option value={""}> -- Choose a Group -- </option>
           {communities?.map((community, key) => (
             <option key={ key } value={ community.id }>
               { community.name }
@@ -121,18 +167,20 @@ export const CreatePost = () => {
           ))}
         </select>
       </div>
-      <div>
+      {/* <div>
         <label htmlFor="image" className="block mb-2 font-medium"> Upload Image </label>
         <input
           type="file" 
           id="image"
           accept="image/*"
-          required
           onChange={handleFileChange}
           className="w-full text-gray-400"
         />
+        { selectedFile && <img src={URL.createObjectURL(selectedFile)} width="250" />}
+      </div> */}
+      <div>
+        <VideoConvert setParentUrls={setParentUrlGif}/>
       </div>
-      { selectedFile && <img src={URL.createObjectURL(selectedFile)} width="250" />}
       <button
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">

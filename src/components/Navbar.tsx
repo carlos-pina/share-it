@@ -13,12 +13,16 @@ export const Navbar = () => {
       if (response && response.error) {
         throw new Error(response.error.message);
       } else {
+        toggleMenuButton();
         navigate("/");
       }
     });
   }
 
-  const displayName = user?.user_metadata.user_name || user?.email;
+  const toggleMenuButton = () => {
+    setMenuOpen((prev) => !prev)
+  }
+
   return (
     <nav className="fixed top-0 w-full z-40 bg-white backdrop-blur-lg border-b border-white/10 shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
@@ -36,10 +40,10 @@ export const Navbar = () => {
               Posts
             </Link>
             <Link
-              to="/communities"
+              to="/groups"
               className="text-gray-400 hover:text-blue-500 transition-colors"
             >
-              Communities
+              Groups
             </Link>
             {user && (
             <div className="hidden md:flex items-center space-x-8">
@@ -50,16 +54,10 @@ export const Navbar = () => {
                 Create Post
               </Link>
               <Link
-                to="/community/create"
+                to="/group/create"
                 className="text-gray-400 hover:text-blue-500 transition-colors"
               >
-                Create Community
-              </Link>
-              <Link
-                to="/convert"
-                className="text-gray-400 hover:text-blue-500 transition-colors"
-              >
-                Video Convert
+                Create Group
               </Link>
             </div>
             )}
@@ -76,7 +74,6 @@ export const Navbar = () => {
                     className="w-8 h-8 rounded-full object-cover"
                   />
                 )}
-                <span className="text-gray-400 text-xs">{ displayName }</span>
                 <button
                   onClick={ onSignOut }
                   className="bg-red-500 px-3 py-1 text-xs rounded cursor-pointer"
@@ -105,7 +102,7 @@ export const Navbar = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
-              onClick={() => setMenuOpen((prev) => !prev)}
+              onClick={toggleMenuButton}
               className="text-gray-400 focus:outline-none"
               aria-label="Toggle menu"
             >
@@ -144,27 +141,61 @@ export const Navbar = () => {
             <Link
               to="/"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
+              onClick={toggleMenuButton}
             >
-              Home
+              Posts
+            </Link>
+            <Link
+              to="/groups"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
+              onClick={toggleMenuButton}
+            >
+              Groups
             </Link>
             <Link
               to="/post/create"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
+              onClick={toggleMenuButton}
             >
               Create Post
             </Link>
             <Link
-              to="/communities"
+              to="/group/create"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
+              onClick={toggleMenuButton}
             >
-              Communities
+              Create Group
             </Link>
-            <Link
-              to="/community/create"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-300"
-            >
-              Create Community
-            </Link>
+          </div>
+          
+          <div className="flex items-center">
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={ onSignOut }
+                  className="bg-red-500 ml-5 mb-5 px-3 py-1 text-xs rounded cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/signin"
+                  className="bg-blue-500 ml-5 mb-5 px-3 py-1 text-xs rounded cursor-pointer"
+                  onClick={toggleMenuButton}
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-blue-500 ml-5 mb-5 px-3 py-1 text-xs rounded cursor-pointer"
+                  onClick={toggleMenuButton}
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

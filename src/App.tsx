@@ -8,7 +8,6 @@ import { CommunitiesPage } from './pages/CommunitiesPage'
 import { CommunityPage } from './pages/CommunityPage'
 import { SignInPage } from './pages/SignInPage'
 import { SignUpPage } from './pages/SignUpPage'
-import { VideoConvertPage } from './pages/VideoConvertPage'
 
 function App() {
   return (
@@ -21,10 +20,9 @@ function App() {
           <Route path='/signin' element={<SignInPage />} />
           <Route path='/post/create' element={<CreatePostPage />} />
           <Route path='/post/:id' element={<PostPage />} />
-          <Route path='/communities' element={<CommunitiesPage />} />
-          <Route path='/community/create' element={<CreateCommunityPage />} />
-          <Route path="/community/:id" element={<CommunityPage />} />
-          <Route path='/convert' element={<VideoConvertPage />} />
+          <Route path='/groups' element={<CommunitiesPage />} />
+          <Route path='/group/create' element={<CreateCommunityPage />} />
+          <Route path="/group/:id" element={<CommunityPage />} />
         </Routes>
       </div>
     </div>

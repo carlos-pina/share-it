@@ -39,15 +39,15 @@ export const PostDetail = ({ postId }: Props) => {
   }
   
   return (
-    <div className="space-y-6">
-      <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
+    <div className="max-w-2xl mx-auto space-y-6">
+      <h2 className="text-4xl font-bold mb-6 text-center text-blue-500">
         {data?.title}
       </h2>
-      {data?.image_url && (
+      {data?.gif_url && (
         <img
-          src={data.image_url}
+          src={data.gif_url}
           alt={data?.title}
-          className="mt-4 rounded object-cover w-full h-64"
+          className="mt-4 rounded object-contain w-full h-64"
         />
       )}
       <p className="text-gray-400">{data?.content}</p>

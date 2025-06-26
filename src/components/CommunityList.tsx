@@ -50,7 +50,7 @@ export const CommunityList = () => {
           className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
         >
           <Link
-            to={`/community/${ community.id }`}
+            to={`/group/${ community.id }`}
             className="text-2xl font-bold text-blue-500 hover:underline"
           >
             { community.name }

@@ -36,7 +36,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
   if (isLoading) {
     return (
       <div>
-        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading communities...</p>
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading groups...</p>
       </div>
     )
   }
@@ -54,7 +54,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
       {data && data.length > 0 ? (
         <div>
           <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
-            {data && data[0].communities.name} Community Posts
+            {data && data[0].communities.name} Group Posts
           </h2>
           <div className="flex flex-wrap gap-6 justify-center">
             {data.map((post) => (
@@ -65,10 +65,10 @@ export const CommunityDisplay = ({ communityId }: Props) => {
       ) : (
         <div>
           <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
-            Community Posts
+            Group Posts
           </h2>
           <p className="text-center text-gray-400">
-            No posts in this community yet.
+            No posts in this group yet.
           </p>
         </div>
       )}

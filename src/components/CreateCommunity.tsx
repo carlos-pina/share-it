@@ -27,7 +27,7 @@ export const CreateCommunity = () => {
     mutationFn: createCommunity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
-      navigate("/communities");
+      navigate("/groups");
     },
   });
 
@@ -39,11 +39,11 @@ export const CreateCommunity = () => {
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 text-gray-400">
       <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
-        Create New Community
+        Create New Group
       </h2>
       <div>
         <label htmlFor="name" className="block mb-2 font-medium">
-          Community Name
+          Name
         </label>
         <input
           type="text"
@@ -70,9 +70,9 @@ export const CreateCommunity = () => {
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
       >
-        {isPending ? "Creating..." : "Create Community"}
+        {isPending ? "Creating..." : "Create Group"}
       </button>
-      {isError && <p className="text-red-500">Error creating community.</p>}
+      {isError && <p className="text-red-500">Error creating group.</p>}
     </form>
   );
 };

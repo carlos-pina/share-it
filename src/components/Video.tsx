@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-const worker = new Worker(new URL('../lib/ffmpegWorker.js', import.meta.url), { type: 'module', });
+const worker = new Worker(new URL('../lib/ffmpegWorkerExample.js', import.meta.url), { type: 'module', });
 
 export const Video = () => {
-  const [videoUrls, setVideoUrls] = useState(['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',]);
+  const [videoUrls, setVideoUrls] = useState<string[]>([]);
   const [audioSrc, setAudioSrc] = useState<string>("");
   const [videoSrc, setVideoSrc] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);

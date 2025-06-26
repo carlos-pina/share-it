@@ -1,62 +1,82 @@
 import { type ChangeEvent, useState } from 'react';
-import { fetchFile } from '@ffmpeg/util';
-import { Video } from "./Video"
-import { useFfmpeg } from '../context/FfmpegContext';
 
-export const VideoConvert = () => {
+export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
   const [video, setVideo] = useState<File | undefined>(undefined);
   const [urlGif, setUrlGif] = useState<string>("");
-  const { ffmpeg, progress } = useFfmpeg();
+  const [_, setUrlImg] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setVideo(event.target.files[0]);
+      setUrlImg("");
+      setUrlGif("");
     }
   };
 
   const convertToGif = async () => {
-    // Write the file to memory 
-    await ffmpeg.writeFile('test.mp4', await fetchFile(video));
+    setIsProcessing(true);
 
-    // Exec the FFMpeg command
-    await ffmpeg.exec(['-i', 'test.mp4', '-t', '2.5', '-ss', '2.0', '-f', 'gif', 'out.gif']);
+    const worker = new Worker(new URL('../lib/ffmpegWorker.ts', import.meta.url), { type: 'module', });
 
-    // Read the result
-    const fileData = await ffmpeg.readFile("out.gif");
-    const data = new Uint8Array(fileData as ArrayBuffer);
-
-    // Set the url gif
-    const url: string = URL.createObjectURL(new Blob([data.buffer], { type: 'image/gif' }));
-    setUrlGif(url)
+    worker.postMessage({
+      video: video,
+    });
+    
+    worker.onmessage = (event) => {
+      if (event.data.progress) {
+        setProgress(event.data.progress);
+      } else if (event.data.finished) {
+        worker.terminate();
+      } else {
+        const { img, imgUrl, gif, gifUrl } = event.data;
+        setUrlImg(imgUrl)
+        setUrlGif(gifUrl);
+        setParentUrls(gif, img);
+        setIsProcessing(false);
+      }
+    };
   }
 
   return (
     <>
-      <Video />
-      <div className="flex justify-center text-blue-500">
-        {video ? (
-          <div className="mt-10">
-            <video controls width="250" src={URL.createObjectURL(video)} />
-            <div className="text-center">
-              <button 
-                className="bg-blue-500 text-white mt-5 mb-5 px-4 py-2 rounded cursor-pointer"
-                onClick={convertToGif}>
-                  Convert
+      <label htmlFor="video" className="block mb-2 font-medium"> Upload Video </label>
+      <input
+        type="file"
+        id="video"
+        required
+        onChange={handleFileChange}
+        className="w-full text-gray-400"
+      />
+      { video && (
+        <div className="mt-5">
+          <div className="flex justify-center items-center mb-5">
+            { isProcessing ? (
+              <div className="flex flex-col text-center">
+                <p>Processing...</p>
+                <progress value={progress} />
+              </div>
+            ) : (
+              <video controls width="500" src={URL.createObjectURL(video)} />
+            )}
+          </div>
+          <div className="flex justify-center items-center">
+            { urlGif ? (
+              <img src={urlGif} width="500" />
+            ) : (
+              <button
+                type="button"
+                className="bg-blue-500 text-white mt-2 mb-2 px-4 py-2 rounded cursor-pointer"
+                onClick={convertToGif}
+                disabled={ isProcessing ? true : false }
+              >
+                  { isProcessing ? "Creating..." : "Create GIF" }
               </button>
-            </div>
-            { urlGif && <img src={urlGif} width="250" />}
-            { progress && progress < 1 && <p className="text-xl font-bold pt-6 text-center text-yellow-500">{progress}</p>}
+            )}
           </div>
-          ) : (
-          <div className="mt-10">
-            <input
-              type="file" 
-              onChange={handleFileChange}
-              className="bg-blue-500 text-white text-center mt-5 mb-5 px-4 py-2 rounded cursor-pointer"
-            />
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };
