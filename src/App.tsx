@@ -8,16 +8,18 @@ import { CommunitiesPage } from './pages/CommunitiesPage'
 import { CommunityPage } from './pages/CommunityPage'
 import { SignInPage } from './pages/SignInPage'
 import { SignUpPage } from './pages/SignUpPage'
+import { HomePage } from './pages/HomePage'
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-gray-100 transition-opacity duration-700 pt-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 text-gray-100 transition-opacity duration-700 pt-10">
       <Navbar />
       <div className="container mx-auto px-4 py-6">
         <Routes>
-          <Route path='/' element={<PostsPage />} />
+          <Route path='/' element={<HomePage/>} />
           <Route path='/signup' element={<SignUpPage />} />
           <Route path='/signin' element={<SignInPage />} />
+          <Route path='/posts' element={<PostsPage />} />
           <Route path='/post/create' element={<CreatePostPage />} />
           <Route path='/post/:id' element={<PostPage />} />
           <Route path='/groups' element={<CommunitiesPage />} />

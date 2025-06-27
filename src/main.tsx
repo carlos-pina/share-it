@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={client}>
       <AuthProvider>
-        <Router>
+        <Router basename='share-it'>
             <App />
         </Router>
       </AuthProvider>
