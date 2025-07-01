@@ -17,7 +17,7 @@ export const fetchGroupPost = async (
   groupId: number
 ): Promise<PostWithGroup[]> => {
   const { data, error } = await supabase
-    .from("posts")
+    .from("posts_with_counts")
     .select("*, groups(name)")
     .eq("group_id", groupId)
     .order("created_at", { ascending: false });

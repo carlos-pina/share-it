@@ -15,7 +15,7 @@ export const PostItem = ({ post }: Props) => {
             <div className="flex flex-col flex-1">
               <div className="text-[20px] leading-[22px] font-semibold mt-2">
                 { post.title }
-                { post.user_id && (<span> by {post.user_id}</span>) }
+                { post.user_name && (<span> by {post.user_name}</span>) }
               </div>
             </div>
           </div>

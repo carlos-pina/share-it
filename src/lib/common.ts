@@ -5,7 +5,7 @@ export interface Post {
   created_at: string;
   image_url: string;
   gif_url: string;
-  user_id: string;
+  user_name: string;
   like_count: number;
   comment_count: number;
 };
