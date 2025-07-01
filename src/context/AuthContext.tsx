@@ -3,13 +3,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 
 interface Credentials {
-  user: string;
+  email: string;
   password: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  signUp: (credentials: Credentials) => Promise<AuthResponse>;
+  signUp: (credentials: Credentials, name: string) => Promise<AuthResponse>;
   signIn: (credentials: Credentials) => Promise<AuthTokenResponsePassword>;
   signOut: () => Promise<{error: AuthError | null}>;
 }
@@ -33,16 +33,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  const signUp = async (credentials: Credentials): Promise<AuthResponse> => {
-    return await supabase.auth.signUp({ 
-      email: credentials.user, 
-      password: credentials.password
+  const signUp = async (credentials: Credentials, name: string): Promise<AuthResponse> => {
+    return await supabase.auth.signUp({
+      email: credentials.email, 
+      password: credentials.password,
+      options: {
+        data: { display_name: name },
+      },
     });
   };
 
   const signIn = async (credentials: Credentials): Promise<AuthTokenResponsePassword> => {
     return await supabase.auth.signInWithPassword({ 
-      email: credentials.user, 
+      email: credentials.email, 
       password: credentials.password
     });
   };

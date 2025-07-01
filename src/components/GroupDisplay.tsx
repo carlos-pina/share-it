@@ -1,36 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Post } from "./PostList";
+import { type Post } from "../lib/common";
 import { supabase } from "../supabase-client";
 import { PostItem } from "./PostItem";
 
 interface Props {
-  communityId: number;
+  groupId: number;
 }
 
-interface PostWithCommunity extends Post {
-  communities: {
+interface PostWithGroup extends Post {
+  groups: {
     name: string;
   };
 }
 
-export const fetchCommunityPost = async (
-  communityId: number
-): Promise<PostWithCommunity[]> => {
+export const fetchGroupPost = async (
+  groupId: number
+): Promise<PostWithGroup[]> => {
   const { data, error } = await supabase
     .from("posts")
-    .select("*, communities(name)")
-    .eq("community_id", communityId)
+    .select("*, groups(name)")
+    .eq("group_id", groupId)
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
   
-  return data as PostWithCommunity[];
+  return data as PostWithGroup[];
 };
 
-export const CommunityDisplay = ({ communityId }: Props) => {
-  const { data, error, isLoading } = useQuery<PostWithCommunity[], Error>({
-    queryKey: ["communityPost", communityId],
-    queryFn: () => fetchCommunityPost(communityId),
+export const GroupDisplay = ({ groupId }: Props) => {
+  const { data, error, isLoading } = useQuery<PostWithGroup[], Error>({
+    queryKey: ["groupPost", groupId],
+    queryFn: () => fetchGroupPost(groupId),
   });
 
   if (isLoading) {
@@ -54,7 +54,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
       {data && data.length > 0 ? (
         <div>
           <h2 className="text-6xl font-bold mb-6 text-center text-blue-500">
-            {data && data[0].communities.name} Group Posts
+            {data && data[0].groups.name} Group Posts
           </h2>
           <div className="flex flex-wrap gap-6 justify-center">
             {data.map((post) => (

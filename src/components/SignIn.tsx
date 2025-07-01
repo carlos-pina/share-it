@@ -12,7 +12,7 @@ export const SignIn = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const authResponse = signIn({ user: email, password: password });
+    const authResponse = signIn({ email: email, password: password });
     authResponse.then((response) => {
       if (response.error) {
         setError(response.error.message);

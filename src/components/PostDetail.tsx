@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
-import type { Post } from "./PostList";
+import { type Post } from "../lib/common";
 import { LikeButton } from "./LikeButton";
 import { CommentSection } from "./CommentSection";
 

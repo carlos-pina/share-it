@@ -3,15 +3,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import { fetchCommunities, type Community } from "./CommunityList";
+import { fetchGroups, type Group } from "./GroupList";
 import { VideoConvert } from "./VideoConvert";
 import type { FileData } from '@ffmpeg/ffmpeg';
 
 interface PostInput {
   title: string;
   content: string;
-  avatar_url: string | null;
-  community_id?: number | null;
+  user_id: string;
+  group_id: number;
 }
 
 /*const createPost = async (post: PostInput, imageFile: File) => {
@@ -39,15 +39,15 @@ interface PostInput {
 export const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [communityId, setCommunityId] = useState<number | null>(null);
+  const [groupId, setGroupId] = useState<number>(0);
   const [dataGif, setDataGif] = useState<FileData>();
   const [dataImg, setDataImg] = useState<FileData>();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { data: communities } = useQuery<Community[], Error>({
-    queryKey: ["communities"],
-    queryFn: fetchCommunities,
+  const { data: groups } = useQuery<Group[], Error>({
+    queryKey: ["groups"],
+    queryFn: fetchGroups,
   });
 
   const { mutate, isPending, isError } = useMutation({ 
@@ -102,7 +102,9 @@ export const CreatePost = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    
+    if (!user)
+      throw new Error("You must to be logged in to create a post.");
+
     if (!dataGif || !dataImg)
       throw new Error("There are not files to upload.");
     
@@ -110,8 +112,8 @@ export const CreatePost = () => {
       post: { 
         title,
         content,
-        avatar_url: user?.user_metadata.avatar_url || null,
-        community_id: communityId,
+        user_id: user.id,
+        group_id: groupId,
       }
     });
   };
@@ -122,9 +124,9 @@ export const CreatePost = () => {
     }
   };*/
 
-  const handleCommunityChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleGroupChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    setCommunityId(value ? Number(value) : null);
+    setGroupId(Number(value));
   };
 
   return (
@@ -153,16 +155,16 @@ export const CreatePost = () => {
         />
       </div>
       <div>
-        <label htmlFor="community" className="block mb-2 font-medium"> Select Group</label>
+        <label htmlFor="group" className="block mb-2 font-medium"> Select Group</label>
         <select
-          id="community"
+          id="group"
           required
-          onChange={handleCommunityChange}
+          onChange={handleGroupChange}
           className="w-full border border-gray/10 bg-transparent p-2 rounded">
           <option value={""}> -- Choose a Group -- </option>
-          {communities?.map((community, key) => (
-            <option key={ key } value={ community.id }>
-              { community.name }
+          {groups?.map((group, key) => (
+            <option key={ key } value={ group.id }>
+              { group.name }
             </option>
           ))}
         </select>

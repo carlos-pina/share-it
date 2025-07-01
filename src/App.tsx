@@ -3,9 +3,9 @@ import { PostsPage } from './pages/PostsPage'
 import { Navbar } from './components/Navbar'
 import { CreatePostPage } from './pages/CreatePostPage'
 import { PostPage } from './pages/PostPage'
-import { CreateCommunityPage } from './pages/CreateCommunityPage'
-import { CommunitiesPage } from './pages/CommunitiesPage'
-import { CommunityPage } from './pages/CommunityPage'
+import { CreateGroupPage } from './pages/CreateGroupPage'
+import { GroupsPage } from './pages/GroupsPage'
+import { GroupPage } from './pages/GroupPage'
 import { SignInPage } from './pages/SignInPage'
 import { SignUpPage } from './pages/SignUpPage'
 import { HomePage } from './pages/HomePage'
@@ -22,9 +22,9 @@ function App() {
           <Route path='/posts' element={<PostsPage />} />
           <Route path='/post/create' element={<CreatePostPage />} />
           <Route path='/post/:id' element={<PostPage />} />
-          <Route path='/groups' element={<CommunitiesPage />} />
-          <Route path='/group/create' element={<CreateCommunityPage />} />
-          <Route path="/group/:id" element={<CommunityPage />} />
+          <Route path='/groups' element={<GroupsPage />} />
+          <Route path='/group/create' element={<CreateGroupPage />} />
+          <Route path="/group/:id" element={<GroupPage />} />
         </Routes>
       </div>
     </div>

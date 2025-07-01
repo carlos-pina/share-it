@@ -1,22 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { PostItem } from "./PostItem";
-
-export interface Post {
-  id: number;
-  title: string;
-  content: string;
-  created_at: string;
-  image_url: string;
-  gif_url: string;
-  avatar_url: string;
-  like_count: number;
-  comment_count: number;
-}
+import { type Post } from "../lib/common";
 
 const fetchPosts = async () : Promise<Post[]> => {
   const { data, error } = await supabase
-    .rpc("get_posts_with_counts");
+    .from("posts_with_counts")
+    .select("*");
   
   if (error) throw new Error(error.message);
 

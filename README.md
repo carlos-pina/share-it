@@ -7,6 +7,7 @@
 - **TypeScript** for type safety and modern JavaScript features
 - **Supabase** for backend services including authentication, real-time data, and storage
 - **Tailwind CSS** for rapid and responsive styling
+- **FFmpeg** for gif and image creation
 
 ## Dependencies
 
@@ -14,3 +15,4 @@
 - **React Query** @tanstack/react-query
 - **Tailwind CSS** tailwindcss @tailwindcss/vite
 - **React Router** react-router
+- **FFmpeg** @ffmpeg/ffmpeg

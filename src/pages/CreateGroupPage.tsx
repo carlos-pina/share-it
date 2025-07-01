@@ -1,14 +1,14 @@
-import { CreateCommunity } from "../components/CreateCommunity";
+import { CreateGroup } from "../components/CreateGroup";
 import { useAuth } from "../context/AuthContext";
 
-export const CreateCommunityPage = () => {
+export const CreateGroupPage = () => {
   const { user } = useAuth();
 
   return (
     <div className="mt-6">
       { user ? (
         <div className="pt-20">
-          <CreateCommunity />
+          <CreateGroup />
         </div>
       ) : (
         <div className="pt-20">

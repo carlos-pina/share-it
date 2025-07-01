@@ -74,6 +74,9 @@ export const Navbar = () => {
                     className="w-8 h-8 rounded-full object-cover"
                   />
                 )}
+                {user.user_metadata?.display_name && (
+                  <span className="text-gray-300">{ user.user_metadata.display_name }</span>
+                )}
                 <button
                   onClick={ onSignOut }
                   className="bg-red-500 px-3 py-1 text-xs rounded cursor-pointer"
@@ -171,9 +174,12 @@ export const Navbar = () => {
           <div className="flex items-center">
             {user ? (
               <div className="flex items-center space-x-4">
+                {user.user_metadata?.display_name && (
+                  <span className="pl-5 pb-5 text-gray-300">{ user.user_metadata.display_name }</span>
+                )}
                 <button
                   onClick={ onSignOut }
-                  className="bg-red-500 ml-5 mb-5 px-3 py-1 text-xs rounded cursor-pointer"
+                  className="bg-red-500 ml-2 mb-5 px-3 py-1 text-xs rounded cursor-pointer"
                 >
                   Sign Out
                 </button>

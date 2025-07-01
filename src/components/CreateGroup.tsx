@@ -2,38 +2,43 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
+import { useAuth } from "../context/AuthContext";
 
-interface CommunityInput {
+interface GroupInput {
   name: string;
   description: string;
+  user_id: string;
 }
-const createCommunity = async (community: CommunityInput) => {
+
+const createGroup = async (group: GroupInput) => {
   const { data, error } = await supabase
-    .from("communities")
-    .insert(community);
+    .from("groups")
+    .insert(group);
 
   if (error) throw new Error(error.message);
   
   return data;
 };
 
-export const CreateCommunity = () => {
+export const CreateGroup = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: createCommunity,
+    mutationFn: createGroup,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communities"] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
       navigate("/groups");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ name, description });
+    if (!user) throw new Error("You must be logged in to create a group!");
+    mutate({ name, description, user_id: user?.id });
   };
 
   return (

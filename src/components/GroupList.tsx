@@ -2,34 +2,35 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { Link } from "react-router";
 
-export interface Community {
+export interface Group {
   id: number;
   name: string;
   description: string;
+  user_id: string;
   created_at: string;
 }
 
-export const fetchCommunities = async (): Promise<Community[]> => {
+export const fetchGroups = async (): Promise<Group[]> => {
   const { data, error } = await supabase
-    .from("communities")
+    .from("groups")
     .select("*")
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
   
-  return data as Community[];
+  return data as Group[];
 };
 
-export const CommunityList = () => {
-  const { data, error, isLoading } = useQuery<Community[], Error>({
-    queryKey: ["communities"],
-    queryFn: fetchCommunities,
+export const GroupList = () => {
+  const { data, error, isLoading } = useQuery<Group[], Error>({
+    queryKey: ["groups"],
+    queryFn: fetchGroups,
   });
 
   if (isLoading) {
     return (
       <div>
-        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading communities...</p>
+        <p className="text-xl font-bold pt-6 text-center text-yellow-500">Loading groups...</p>
       </div>
     )
   }
@@ -44,18 +45,18 @@ export const CommunityList = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
-      {data?.map((community) => (
+      {data?.map((group) => (
         <div
-          key={ community.id }
+          key={ group.id }
           className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
         >
           <Link
-            to={`/group/${ community.id }`}
+            to={`/group/${ group.id }`}
             className="text-2xl font-bold text-blue-500 hover:underline"
           >
-            { community.name }
+            { group.name }
           </Link>
-          <p className="text-gray-400 mt-2">{ community.description }</p>
+          <p className="text-gray-400 mt-2">{ group.description }</p>
         </div>
       ))}
     </div>

@@ -74,7 +74,7 @@ export const CommentSection = ({ postId }: Props) => {
         newComment,
         postId,
         user?.id,
-        user?.user_metadata.user_name || user?.email
+        user?.user_metadata.display_name
       ),
 
     onSuccess: () => {

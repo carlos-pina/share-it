@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 export const SignUp = () => {
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -11,7 +12,7 @@ export const SignUp = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const authResponse = signUp({ user: email, password: password });
+    const authResponse = signUp({ email: email, password: password }, name);
     authResponse.then((response) => {
       if (response.error) {
         setError(response.error.message);
@@ -40,7 +41,17 @@ export const SignUp = () => {
       ) : (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4 text-gray-400">
           <div>
-            <label htmlFor="email" className="block mb-2 font-medium"> User </label>
+            <label htmlFor="user" className="block mb-2 font-medium"> User </label>
+            <input
+              type="text"
+              id="user"
+              required
+              onChange={(event) => setName(event.target.value)}
+              className="w-full border border-gray/10 bg-transparent p-2 rounded"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block mb-2 font-medium"> Email </label>
             <input
               type="email"
               id="email"
