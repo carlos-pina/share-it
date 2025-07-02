@@ -13,10 +13,9 @@ const createReply = async (
   replyContent: string, 
   postId: number, 
   parentCommentId: number, 
-  userId?: string, 
-  author?: string
+  userId?: string
 ) => {
-  if (!userId || !author) {
+  if (!userId) {
     throw new Error("You must to be logged in to reply.");
   }
   
@@ -26,8 +25,7 @@ const createReply = async (
       post_id: postId,
       content: replyContent,
       parent_comment_id: parentCommentId,
-      user_id: userId,
-      author: author
+      user_id: userId
     })
   
   if (error) throw new Error(error.message);
@@ -46,8 +44,7 @@ export const CommentItem = ({ comment, postId }: Props) => {
         replyContent,
         postId,
         comment.id,
-        user?.id,
-        user?.user_metadata.display_name
+        user?.id
       ),
 
     onSuccess: () => {
@@ -70,9 +67,9 @@ export const CommentItem = ({ comment, postId }: Props) => {
       <div className="mb-2">
         <div className="flex items-center space-x-2">
         
-          { /* Display the comenters username */ }
+          { /* Display the commenters username */ }
           <span className="text-sm font-bold text-blue-400">
-            { comment.author }
+            { comment.users.name }
           </span>
           <span className="text-xs text-gray-500">
             { new Date(comment.created_at).toLocaleString() }

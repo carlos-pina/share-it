@@ -19,17 +19,18 @@ export interface Comment {
   parent_comment_id: number;
   content: string;
   user_id: string;
+  users: {
+    name: string;
+  }
   created_at: string;
-  author: string;
 }
 
 const createComment = async (
   newComment: NewComment,
   postId: number,
-  userId?: string,
-  author?: string
+  userId?: string
 ) => {
-  if (!userId || !author) {
+  if (!userId) {
     throw new Error("You must to be logged in to comment.");
   }
 
@@ -39,8 +40,7 @@ const createComment = async (
       post_id: postId,
       content: newComment.content,
       parent_comment_id: newComment.parent_comment_id || null,
-      user_id: userId,
-      author: author
+      user_id: userId
     })
 
   if (error) throw new Error(error.message);
@@ -49,7 +49,7 @@ const createComment = async (
 const fetchComments = async (postId: number): Promise<Comment[]> => {
   const { data, error } = await supabase
       .from("comments")
-      .select("*")
+      .select("*, users(name)")
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
     
@@ -73,8 +73,7 @@ export const CommentSection = ({ postId }: Props) => {
       createComment(
         newComment,
         postId,
-        user?.id,
-        user?.user_metadata.display_name
+        user?.id
       ),
 
     onSuccess: () => {

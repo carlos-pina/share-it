@@ -15,7 +15,6 @@ export const PostItem = ({ post }: Props) => {
             <div className="flex flex-col flex-1">
               <div className="text-[20px] leading-[22px] font-semibold mt-2">
                 { post.title }
-                { post.user_name && (<span> by {post.user_name}</span>) }
               </div>
             </div>
           </div>
@@ -34,6 +33,9 @@ export const PostItem = ({ post }: Props) => {
             </span>
             <span className="cursor-pointer px-1 flex items-center justify-center font-extrabold rounded-lg">
               💬 <span className="ml-2"> { post.comment_count ?? 0 } </span>
+            </span>
+            <span>
+              { post.user_name && (<span className="ml-2"> 👽 {post.user_name} </span>) }
             </span>
           </div>
         </div>

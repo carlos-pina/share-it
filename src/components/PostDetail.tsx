@@ -3,6 +3,7 @@ import { supabase } from "../supabase-client";
 import { type Post } from "../lib/common";
 import { LikeButton } from "./LikeButton";
 import { CommentSection } from "./CommentSection";
+import { Link } from "react-router";
 
 interface Props {
     postId: number;
@@ -40,6 +41,9 @@ export const PostDetail = ({ postId }: Props) => {
   
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <div>
+        <Link to='/posts' className="underline text-blue-500"> ⬅ Back to Posts</Link>
+      </div>
       <h2 className="text-4xl font-bold mb-6 text-center text-blue-500">
         {data?.title}
       </h2>

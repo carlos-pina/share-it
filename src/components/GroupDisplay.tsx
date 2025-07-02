@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { type Post } from "../lib/common";
 import { supabase } from "../supabase-client";
 import { PostItem } from "./PostItem";
+import { Link } from "react-router";
 
 interface Props {
   groupId: number;
@@ -68,7 +69,7 @@ export const GroupDisplay = ({ groupId }: Props) => {
             Group Posts
           </h2>
           <p className="text-center text-gray-400">
-            No posts in this group yet.
+            No posts in this group yet, so create the first <Link to='/post/create' className="underline text-blue-500">Post</Link>
           </p>
         </div>
       )}

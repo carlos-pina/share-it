@@ -17,7 +17,7 @@ onmessage = async (event) => {
   await ffmpeg.writeFile('test.mp4', await fetchFile(video));
 
   // Create screenshot from FFMpeg command
-  await ffmpeg.exec(['-ss', '1.0', '-i', 'test.mp4', '-frames:v', '1', 'out.png']);  
+  await ffmpeg.exec(['-ss', '00:00:01', '-i', 'test.mp4', '-frames:v', '1', '-vf', "scale='min(640,iw)':-1", '-r', '10', 'out.png']);  
 
   const img = await ffmpeg.readFile("out.png");
   const imgData = new Uint8Array(img as ArrayBuffer);
@@ -26,7 +26,7 @@ onmessage = async (event) => {
   const imgUrl = URL.createObjectURL(new Blob([imgData.buffer], { type: 'image/png' }));
 
   // Create gif from FFMpeg command
-  await ffmpeg.exec(['-i', 'test.mp4', '-t', '2.5', '-ss', '2.0', '-f', 'gif', 'out.gif']);
+  await ffmpeg.exec(['-i', 'test.mp4', '-t', '2.5', '-ss', '00:00:02', '-vf', "scale='min(640,iw)':-1", '-r', '10', '-f', 'gif', 'out.gif']);
 
   // Read the result
   const gif = await ffmpeg.readFile("out.gif");

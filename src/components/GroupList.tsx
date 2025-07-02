@@ -7,13 +7,16 @@ export interface Group {
   name: string;
   description: string;
   user_id: string;
+  users: {
+    name: string;
+  }
   created_at: string;
 }
 
 export const fetchGroups = async (): Promise<Group[]> => {
   const { data, error } = await supabase
     .from("groups")
-    .select("*")
+    .select("*, users(name)")
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
@@ -57,6 +60,7 @@ export const GroupList = () => {
             { group.name }
           </Link>
           <p className="text-gray-400 mt-2">{ group.description }</p>
+          <p className="text-blue-500 mt-2">{ group.users.name }</p>
         </div>
       ))}
     </div>
