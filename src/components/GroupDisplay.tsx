@@ -69,7 +69,7 @@ export const GroupDisplay = ({ groupId }: Props) => {
             Group Posts
           </h2>
           <p className="text-center text-gray-400">
-            No posts in this group yet, so create the first <Link to='/post/create' className="underline text-blue-500">Post</Link>
+            No posts in this group yet, so create the first <Link to={{ pathname: "/post/create", search: `?groupId=${groupId}` }} className="underline text-blue-500">Post</Link>
           </p>
         </div>
       )}

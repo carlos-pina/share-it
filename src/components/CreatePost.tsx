@@ -7,6 +7,10 @@ import { fetchGroups, type Group } from "./GroupList";
 import { VideoConvert } from "./VideoConvert";
 import type { FileData } from '@ffmpeg/ffmpeg';
 
+interface Props {
+  groupId: number;
+}
+
 interface PostInput {
   title: string;
   content: string;
@@ -36,7 +40,7 @@ interface PostInput {
   return data;
 }*/
 
-export const CreatePost = () => {
+export const CreatePost = (props: Props) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [groupId, setGroupId] = useState<number>(0);
@@ -149,7 +153,7 @@ export const CreatePost = () => {
         <textarea 
           id="content"
           required
-          rows={5}
+          rows={2}
           onChange={(event) => setContent(event.target.value)}
           className="w-full border border-gray/10 bg-transparent p-2 rounded"
         />
@@ -159,6 +163,7 @@ export const CreatePost = () => {
         <select
           id="group"
           required
+          defaultValue={props.groupId}
           onChange={handleGroupChange}
           className="w-full border border-gray/10 bg-transparent p-2 rounded">
           <option value={""}> -- Choose a Group -- </option>
@@ -183,12 +188,14 @@ export const CreatePost = () => {
       <div>
         <VideoConvert setParentUrls={setParentUrlGif}/>
       </div>
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
-          { isPending ? "Creating..." : "Create Post" }
+      <div className="text-center">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
+            { isPending ? "Creating..." : "Create Post" }
         </button>
-        {isError && <p className="text-red-500"> Error creating post. </p>}
+      </div>
+      {isError && <p className="text-red-500"> Error creating post. </p>}
     </form>
   );
 };

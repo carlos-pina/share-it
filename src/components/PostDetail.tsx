@@ -12,7 +12,7 @@ interface Props {
 const fetchPostById = async (id: number) : Promise<Post> => {
   const { data, error } = await supabase
     .from("posts")
-    .select("*")
+    .select("*, users(name)")
     .eq("id", id)
     .single();
   
@@ -56,7 +56,7 @@ export const PostDetail = ({ postId }: Props) => {
       )}
       <p className="text-gray-400">{data?.content}</p>
       <p className="text-gray-500 text-sm">
-        Posted on: {new Date(data!.created_at).toLocaleDateString()}
+        Posted by {data!.users.name} on: {new Date(data!.created_at).toLocaleDateString()}
       </p>
 
       <LikeButton postId={postId} />

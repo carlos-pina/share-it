@@ -6,18 +6,15 @@ export interface Group {
   id: number;
   name: string;
   description: string;
-  user_id: string;
-  users: {
-    name: string;
-  }
   created_at: string;
+  user_name: string;
+  post_count: number;
 }
 
 export const fetchGroups = async (): Promise<Group[]> => {
   const { data, error } = await supabase
-    .from("groups")
-    .select("*, users(name)")
-    .order("created_at", { ascending: false });
+    .from("groups_with_counts")
+    .select("*");
 
   if (error) throw new Error(error.message);
   
@@ -47,11 +44,11 @@ export const GroupList = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4">
+    <div className="max-w-xl mx-auto space-y-4">
       {data?.map((group) => (
         <div
           key={ group.id }
-          className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
+          className="bg-gray-100 border border-gray-200 p-3 rounded-[20px] hover:-translate-y-1 transition transform hover:bg-gray-300"
         >
           <Link
             to={`/group/${ group.id }`}
@@ -60,7 +57,14 @@ export const GroupList = () => {
             { group.name }
           </Link>
           <p className="text-gray-400 mt-2">{ group.description }</p>
-          <p className="text-blue-500 mt-2">{ group.users.name }</p>
+          <div className="flex justify-around items-center mt-2">
+            <span className="flex items-center justify-center rounded-lg">
+              👽 <span className="text-blue-500 ml-2">{ group.user_name }</span>
+            </span>
+            <span className="flex items-center justify-center rounded-lg">
+              #️⃣ <span className="text-blue-500 ml-2">{ group.post_count }</span>
+            </span>
+          </div>
         </div>
       ))}
     </div>

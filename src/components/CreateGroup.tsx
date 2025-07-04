@@ -68,15 +68,17 @@ export const CreateGroup = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="w-full border border-gray/10 bg-transparent p-2 rounded"
-          rows={3}
+          rows={2}
         />
       </div>
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
-      >
-        {isPending ? "Creating..." : "Create Group"}
-      </button>
+      <div className="text-center">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
+        >
+          {isPending ? "Creating..." : "Create Group"}
+        </button>
+      </div>
       {isError && <p className="text-red-500">Error creating group.</p>}
     </form>
   );

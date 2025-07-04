@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export const SignIn = () => {
   const [email, setEmail] = useState<string>("");
@@ -45,13 +45,18 @@ export const SignIn = () => {
             className="w-full border border-gray/10 bg-transparent p-2 rounded"
           />
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
-            Sign In
-        </button>
-        {error && <p className="text-red-500"> Error sign in: { error } </p>}
+        <div className="text-center">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
+              Sign In
+          </button>
+        </div>
       </form>
+      <div className="text-center text-gray-400 m-5">
+        New to Share It? <Link to="/signup" className="underline text-blue-500">Create an account</Link>
+      </div>
+      {error && <p className="text-red-500"> Error sign in: { error } </p>}
     </div>
   );
 };
