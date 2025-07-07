@@ -144,7 +144,7 @@ export const CreatePost = (props: Props) => {
           type="text"
           id="title"
           required
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full border border-gray/10 bg-transparent p-2 rounded"
         />
       </div>
@@ -154,7 +154,7 @@ export const CreatePost = (props: Props) => {
           id="content"
           required
           rows={2}
-          onChange={(event) => setContent(event.target.value)}
+          onChange={(e) => setContent(e.target.value)}
           className="w-full border border-gray/10 bg-transparent p-2 rounded"
         />
       </div>

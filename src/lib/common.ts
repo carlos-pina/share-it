@@ -13,3 +13,15 @@ export interface Post {
   like_count: number;
   comment_count: number;
 };
+
+export interface VideoMetadata {
+  duration: string,
+  size: number,
+  width: number,
+  height: number
+};
+
+export interface gapData {
+  from: string,
+  to: string
+}

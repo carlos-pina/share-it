@@ -1,28 +1,57 @@
 import { type ChangeEvent, useState } from 'react';
+import type { VideoMetadata } from '../lib/common';
 
 export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
   const [video, setVideo] = useState<File | undefined>(undefined);
   const [urlGif, setUrlGif] = useState<string>("");
-  const [_, setUrlImg] = useState<string>("");
+  const [, setUrlImg] = useState<string>("");
+  const [metadata, setMetadata] = useState<VideoMetadata>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const [timeFrom, setTimeFrom] = useState<string>("");
+  const [timeTo, setTimeTo] = useState<string>("");
+
+  const worker = new Worker(new URL('../lib/ffmpegWorker.ts', import.meta.url), { type: 'module', });
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setVideo(event.target.files[0]);
-      setUrlImg("");
-      setUrlGif("");
+      const v = event.target.files[0];
+      setIsLoading(true);
+
+      worker.postMessage({
+        action: "getMetadata",
+        video: event.target.files[0]
+      })
+
+      worker.onmessage = (event) => {
+        if (event.data.finished) {
+          worker.terminate();
+        } else {
+          const { metadata } = event.data;
+          setMetadata(metadata);
+          setVideo(v);
+          setUrlImg("");
+          setUrlGif("");
+          setIsLoading(false);
+        }
+      }
     }
   };
 
   const convertToGif = async () => {
+    if (Number(timeTo) <= Number(timeFrom)) {
+      throw new Error("Initial value must be less than the Final value.");
+    }
+
     setIsProcessing(true);
 
-    const worker = new Worker(new URL('../lib/ffmpegWorker.ts', import.meta.url), { type: 'module', });
-
     worker.postMessage({
+      action: "getImgAndGif",
       video: video,
-    });
+      metadata: metadata,
+      gap: { from: timeFrom, to: timeTo }
+    })
     
     worker.onmessage = (event) => {
       if (event.data.progress) {
@@ -36,7 +65,15 @@ export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
         setParentUrls(gif, img);
         setIsProcessing(false);
       }
-    };
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div> 
+        <p className="text-center">Loading video...</p>
+      </div>
+    )
   }
 
   return (
@@ -45,7 +82,6 @@ export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
       <input
         type="file"
         id="video"
-        required
         onChange={handleFileChange}
         className="w-full text-gray-400"
       />
@@ -58,7 +94,31 @@ export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
                 <progress value={progress} />
               </div>
             ) : (
-              <video controls width="500" src={URL.createObjectURL(video)} />
+              (metadata && 
+                <div className="flex flex-col text-center">
+                  <video controls width="500" src={URL.createObjectURL(video)} />
+                  <input
+                    type="range"
+                    min={0}
+                    max={metadata.duration}
+                    step={0.1}
+                    value={timeFrom}
+                    id="timeFrom"
+                    onChange={(e) => setTimeFrom(e.target.value)}
+                    className="p-2"
+                  />
+                  <input
+                    type="range"
+                    min={0}
+                    max={metadata.duration}
+                    step={0.1}
+                    value={timeTo}
+                    id="timeTo"
+                    onChange={(e) => setTimeTo(e.target.value)}
+                    className="p-2"
+                  />
+                </div>
+              )
             )}
           </div>
           <div className="flex justify-center items-center">

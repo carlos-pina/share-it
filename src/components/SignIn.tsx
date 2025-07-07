@@ -31,7 +31,7 @@ export const SignIn = () => {
             type="email"
             id="email"
             required
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-gray/10 bg-transparent p-2 rounded"
           />
         </div>
@@ -41,7 +41,7 @@ export const SignIn = () => {
             type="password"
             id="password"
             required
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray/10 bg-transparent p-2 rounded"
           />
         </div>

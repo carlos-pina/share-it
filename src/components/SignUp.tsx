@@ -48,7 +48,7 @@ export const SignUp = () => {
                 type="text"
                 id="user"
                 required
-                onChange={(event) => setName(event.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray/10 bg-transparent p-2 rounded"
               />
             </div>
@@ -58,7 +58,7 @@ export const SignUp = () => {
                 type="email"
                 id="email"
                 required
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full border border-gray/10 bg-transparent p-2 rounded"
               />
             </div>
@@ -68,7 +68,7 @@ export const SignUp = () => {
                 type="password"
                 id="password"
                 required
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full border border-gray/10 bg-transparent p-2 rounded"
               />
             </div>
