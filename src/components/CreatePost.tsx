@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 import { fetchGroups, type Group } from "./GroupList";
 import { VideoConvert } from "./VideoConvert";
 import type { FileData } from '@ffmpeg/ffmpeg';
+import { Video } from "./Video";
+import type { VideoMetadata } from '../lib/common';
 
 interface Props {
   groupId: number;
@@ -44,6 +46,8 @@ export const CreatePost = (props: Props) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [groupId, setGroupId] = useState<number>(0);
+  const [video, setVideo] = useState<File | undefined>(undefined);
+  const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>();
   const [dataGif, setDataGif] = useState<FileData>();
   const [dataImg, setDataImg] = useState<FileData>();
   const { user } = useAuth();
@@ -60,13 +64,22 @@ export const CreatePost = (props: Props) => {
     },
 
     onSuccess: () => {
-      navigate("/");
+      navigate("/posts");
     }
   });
 
   const setParentUrlGif = (gifData: FileData, imgData: FileData) => {
     setDataGif(gifData);
     setDataImg(imgData);
+  }
+
+  const setParentVideo = (videoData: File) => {
+    setVideo(videoData);
+    setVideoMetadata(undefined);
+  }
+
+  const setParentVideoMetadata = (metadata: VideoMetadata) => {
+    setVideoMetadata(metadata);
   }
 
   const uploadFile = async (imageFile: FileData, extension: string): Promise<string> => {
@@ -122,12 +135,6 @@ export const CreatePost = (props: Props) => {
     });
   };
 
-  /*const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-        setSelectedFile(event.target.files[0]);
-    }
-  };*/
-
   const handleGroupChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setGroupId(Number(value));
@@ -174,19 +181,9 @@ export const CreatePost = (props: Props) => {
           ))}
         </select>
       </div>
-      {/* <div>
-        <label htmlFor="image" className="block mb-2 font-medium"> Upload Image </label>
-        <input
-          type="file" 
-          id="image"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full text-gray-400"
-        />
-        { selectedFile && <img src={URL.createObjectURL(selectedFile)} width="250" />}
-      </div> */}
       <div>
-        <VideoConvert setParentUrls={setParentUrlGif}/>
+        <Video setParentVideo={setParentVideo} setParentMetadata={setParentVideoMetadata} />
+        <VideoConvert video={video} videoMetadata={videoMetadata} setParentUrls={setParentUrlGif}/>
       </div>
       <div className="text-center">
         <button

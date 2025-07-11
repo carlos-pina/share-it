@@ -1,12 +1,14 @@
-import { type ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import type { VideoMetadata } from '../lib/common';
 
-export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
-  const [video, setVideo] = useState<File | undefined>(undefined);
+interface Props {
+  video?: File, 
+  videoMetadata?: VideoMetadata, 
+  setParentUrls: any
+}
+
+export const VideoConvert = ( { video, videoMetadata, setParentUrls }: Props ) => {
   const [urlGif, setUrlGif] = useState<string>("");
-  const [, setUrlImg] = useState<string>("");
-  const [metadata, setMetadata] = useState<VideoMetadata>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [timeFrom, setTimeFrom] = useState<string>("");
@@ -14,42 +16,18 @@ export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
 
   const worker = new Worker(new URL('../lib/ffmpegWorker.ts', import.meta.url), { type: 'module', });
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const v = event.target.files[0];
-      setIsLoading(true);
-
-      worker.postMessage({
-        action: "getMetadata",
-        video: event.target.files[0]
-      })
-
-      worker.onmessage = (event) => {
-        if (event.data.finished) {
-          worker.terminate();
-        } else {
-          const { metadata } = event.data;
-          setMetadata(metadata);
-          setVideo(v);
-          setUrlImg("");
-          setUrlGif("");
-          setIsLoading(false);
-        }
-      }
-    }
-  };
-
   const convertToGif = async () => {
     if (Number(timeTo) <= Number(timeFrom)) {
       throw new Error("Initial value must be less than the Final value.");
     }
 
     setIsProcessing(true);
+    setUrlGif("");
 
     worker.postMessage({
       action: "getImgAndGif",
       video: video,
-      metadata: metadata,
+      metadata: videoMetadata,
       gap: { from: timeFrom, to: timeTo }
     })
     
@@ -60,83 +38,63 @@ export const VideoConvert = ( { setParentUrls }: { setParentUrls: any } ) => {
         worker.terminate();
       } else {
         const { img, imgUrl, gif, gifUrl } = event.data;
-        setUrlImg(imgUrl)
         setUrlGif(gifUrl);
         setParentUrls(gif, img);
+        setTimeFrom("");
+        setTimeTo("");
         setIsProcessing(false);
       }
     }
   }
 
-  if (isLoading) {
-    return (
-      <div> 
-        <p className="text-center">Loading video...</p>
-      </div>
-    )
-  }
-
   return (
-    <>
-      <label htmlFor="video" className="block mb-2 font-medium"> Upload Video </label>
-      <input
-        type="file"
-        id="video"
-        onChange={handleFileChange}
-        className="w-full text-gray-400"
-      />
-      { video && (
-        <div className="mt-5">
-          <div className="flex justify-center items-center mb-5">
-            { isProcessing ? (
-              <div className="flex flex-col text-center">
-                <p>Processing...</p>
-                <progress value={progress} />
-              </div>
-            ) : (
-              (metadata && 
-                <div className="flex flex-col text-center">
-                  <video controls width="500" src={URL.createObjectURL(video)} />
-                  <input
-                    type="range"
-                    min={0}
-                    max={metadata.duration}
-                    step={0.1}
-                    value={timeFrom}
-                    id="timeFrom"
-                    onChange={(e) => setTimeFrom(e.target.value)}
-                    className="p-2"
-                  />
-                  <input
-                    type="range"
-                    min={0}
-                    max={metadata.duration}
-                    step={0.1}
-                    value={timeTo}
-                    id="timeTo"
-                    onChange={(e) => setTimeTo(e.target.value)}
-                    className="p-2"
-                  />
-                </div>
-              )
-            )}
+    <div className="mt-5">
+      <div className="flex justify-center items-center mb-5">
+        { isProcessing ? (
+          <div className="flex flex-col text-center">
+            <p>Processing...</p>
+            <progress value={progress} />
           </div>
-          <div className="flex justify-center items-center">
-            { urlGif ? (
-              <img src={urlGif} width="500" />
-            ) : (
+        ) : (
+          (videoMetadata && 
+            <div className="flex flex-col text-center">
+              <input
+                type="range"
+                min={0}
+                max={videoMetadata.duration}
+                step={0.1}
+                value={timeFrom}
+                id="timeFrom"
+                onChange={(e) => setTimeFrom(e.target.value)}
+                className="p-2"
+              />
+              <p>{timeFrom}</p>
+              <input
+                type="range"
+                min={0}
+                max={videoMetadata.duration}
+                step={0.1}
+                value={timeTo}
+                id="timeTo"
+                onChange={(e) => setTimeTo(e.target.value)}
+                className="p-2"
+              />
+              <p>{timeTo}</p>
               <button
                 type="button"
                 className="bg-blue-500 text-white mt-2 mb-2 px-4 py-2 rounded cursor-pointer"
                 onClick={convertToGif}
                 disabled={ isProcessing ? true : false }
               >
-                  { isProcessing ? "Creating..." : "Create GIF" }
+                { isProcessing ? "Creating..." : "Create GIF" }
               </button>
-            )}
-          </div>
-        </div>
-      )}
-    </>
+              <div className="flex justify-center items-center">
+                { urlGif && ( <img src={urlGif} width="500" /> ) }
+              </div>
+            </div>
+          )
+        )}
+      </div>
+    </div>
   );
 };
