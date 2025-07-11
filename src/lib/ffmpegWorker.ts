@@ -13,7 +13,7 @@ onmessage = async (event) => {
 };
 
 const getMetadata = async (video: File) => {
-  let metadata: VideoMetadata = { 
+  const metadata: VideoMetadata = { 
     duration: "",
     size: 0,
     width: 0,
@@ -86,10 +86,10 @@ const getImgAndGif = async (video: File, metadata: VideoMetadata, gap: gapData) 
   await ffmpeg.exec(['-ss', middle.toString(), '-i', 'test.mp4', '-frames:v', '1', '-vf', "scale='min(640,iw)':-1", '-r', '10', 'out.png']);  
 
   const img = await ffmpeg.readFile("out.png");
-  const imgData = new Uint8Array(img as ArrayBuffer);
+  //const imgData = new Uint8Array(img as ArrayBuffer);
 
   // Set the url img
-  const imgUrl = URL.createObjectURL(new Blob([imgData.buffer], { type: 'image/png' }));
+  //const imgUrl = URL.createObjectURL(new Blob([imgData.buffer], { type: 'image/png' }));
 
   // Create gif from FFMpeg command
   await ffmpeg.exec(['-i', 'test.mp4', '-t', time.toString(), '-ss', start.toString(), '-vf', "scale='min(640,iw)':-1", '-r', '10', '-f', 'gif', 'out.gif']);
@@ -103,7 +103,6 @@ const getImgAndGif = async (video: File, metadata: VideoMetadata, gap: gapData) 
   
   postMessage({
     img: img,
-    imgUrl: imgUrl,
     gif: gif,
     gifUrl: gifUrl,
   });

@@ -49,6 +49,7 @@ export const Video = ( { setParentVideo, setParentMetadata }: Props ) => {
       <input
         type="file"
         id="video"
+        accept="video/mp4,video/x-m4v,video/*"
         onChange={handleFileChange}
         className="w-full text-gray-400"
       />

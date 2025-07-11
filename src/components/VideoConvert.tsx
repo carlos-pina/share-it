@@ -37,7 +37,7 @@ export const VideoConvert = ( { video, videoMetadata, setParentUrls }: Props ) =
       } else if (event.data.finished) {
         worker.terminate();
       } else {
-        const { img, imgUrl, gif, gifUrl } = event.data;
+        const { img, gif, gifUrl } = event.data;
         setUrlGif(gifUrl);
         setParentUrls(gif, img);
         setTimeFrom("");
