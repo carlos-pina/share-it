@@ -3,12 +3,12 @@ import { fetchFile } from '@ffmpeg/util';
 import type { gapData, VideoMetadata } from './common';
 
 onmessage = async (event) => {
-  const { action, video, metadata, gap } = event.data;
+  const { action, video, gap } = event.data;
 
   if (action == "getMetadata") {
     getMetadata(video);
   } else if (action == "getImgAndGif") {
-    getImgAndGif(video, metadata, gap);
+    getImgAndGif(video, gap);
   }
 };
 
@@ -29,11 +29,10 @@ const getMetadata = async (video: File) => {
   // Get metadata information
   await ffmpeg.ffprobe(["-v", "error", "-select_streams", "v:0", "-show_entries", "format=duration,size:stream=width,height", "-of", "default=noprint_wrappers=1", "test.mp4", "-o", "out.txt"]);
   
-  const txt = await ffmpeg.readFile("out.txt");
-  const txtData = new Uint8Array(txt as ArrayBuffer);
+  const txtData = await ffmpeg.readFile("out.txt");
   
   // Get info in text format
-  const text = await new Blob([txtData.buffer]).text();
+  const text = await new Blob([txtData]).text();
 
   for (const line of text.split(/[\r\n]+/)) {
     const keyValue = line.split('=');
@@ -64,7 +63,7 @@ const getMetadata = async (video: File) => {
   });
 };
 
-const getImgAndGif = async (video: File, metadata: VideoMetadata, gap: gapData) => {
+const getImgAndGif = async (video: File, gap: gapData) => {
   const ffmpeg = new FFmpeg();
   await ffmpeg.load();
 
@@ -74,37 +73,29 @@ const getImgAndGif = async (video: File, metadata: VideoMetadata, gap: gapData) 
     });
   });
 
-  const duration = Number(metadata.duration);
-  const middle = duration * 0.5;
-  const time = Number(gap.to) - Number(gap.from);
-  const start = Number(gap.from);
+  const gapTo = Number(gap.to);
+  const gapFrom = Number(gap.from);
+  const time = gapTo - gapFrom;
+  const middle = (time * 0.5) + gapFrom;
+  const start = gapFrom;
 
   // Write the file to memory 
   await ffmpeg.writeFile('test.mp4', await fetchFile(video));
 
   // Create screenshot from FFMpeg command
-  await ffmpeg.exec(['-ss', middle.toString(), '-i', 'test.mp4', '-frames:v', '1', '-vf', "scale='min(640,iw)':-1", '-r', '10', 'out.png']);  
+  await ffmpeg.exec(['-ss', middle.toString(), '-i', 'test.mp4', '-frames:v', '1', '-vf', "scale='min(320,iw)':-1", 'out.png']);  
 
-  const img = await ffmpeg.readFile("out.png");
-  //const imgData = new Uint8Array(img as ArrayBuffer);
-
-  // Set the url img
-  //const imgUrl = URL.createObjectURL(new Blob([imgData.buffer], { type: 'image/png' }));
+  const imgData = await ffmpeg.readFile("out.png");
 
   // Create gif from FFMpeg command
-  await ffmpeg.exec(['-i', 'test.mp4', '-t', time.toString(), '-ss', start.toString(), '-vf', "scale='min(640,iw)':-1", '-r', '10', '-f', 'gif', 'out.gif']);
+  await ffmpeg.exec(['-i', 'test.mp4', '-t', time.toString(), '-ss', start.toString(), '-vf', "fps=6,scale='min(320,iw)':-1", '-f', 'gif', 'out.gif']);
 
   // Read the result
-  const gif = await ffmpeg.readFile("out.gif");
-  const gifData = new Uint8Array(gif as ArrayBuffer);
-
-  // Set the url gif
-  const gifUrl = URL.createObjectURL(new Blob([gifData.buffer], { type: 'image/gif' }));
+  const gifData = await ffmpeg.readFile("out.gif");
   
   postMessage({
-    img: img,
-    gif: gif,
-    gifUrl: gifUrl,
+    img: imgData,
+    gif: gifData,
   });
 
   postMessage({

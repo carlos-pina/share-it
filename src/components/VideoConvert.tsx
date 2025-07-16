@@ -27,7 +27,6 @@ export const VideoConvert = ( { video, videoMetadata, setParentUrls }: Props ) =
     worker.postMessage({
       action: "getImgAndGif",
       video: video,
-      metadata: videoMetadata,
       gap: { from: timeFrom, to: timeTo }
     })
     
@@ -37,7 +36,8 @@ export const VideoConvert = ( { video, videoMetadata, setParentUrls }: Props ) =
       } else if (event.data.finished) {
         worker.terminate();
       } else {
-        const { img, gif, gifUrl } = event.data;
+        const { img, gif } = event.data;
+        const gifUrl = URL.createObjectURL(new Blob([gif], { type: 'image/gif' }));
         setUrlGif(gifUrl);
         setParentUrls(gif, img);
         setTimeFrom("");
